@@ -2240,3 +2240,32 @@ def test_gh_17703():
     actual = cdist(np.atleast_2d(arr_1),
                    np.atleast_2d(arr_2), metric='dice')
     assert_allclose(actual, expected)
+
+
+import unittest
+
+class TestKulsinskiDistance(unittest.TestCase):
+    
+    def test_kulsinski_identical_arrays(self):
+        u = [1, 0, 0]
+        v = [1, 0, 0]
+        result = distance.kulsinski(u, v)
+        self.assertEqual(result, 0.0)
+
+    def test_kulsinski_completely_different_arrays(self):
+        u = [1, 0, 0]
+        v = [0, 1, 1]
+        result = distance.kulsinski(u, v)
+        self.assertEqual(result, float("inf"))
+
+    def test_kulsinski_half_different_arrays(self):
+        u = [1, 0, 0]
+        v = [0, 1, 0]
+        result = distance.kulsinski(u, v)
+        self.assertEqual(result, 1.0)
+
+    def test_kulsinski_mixed_arrays(self):
+        u = [1, 1, 0, 0, 1]
+        v = [0, 1, 1, 0, 0]
+        result = distance.kulsinski(u, v)
+        self.assertEqual(result, 0.6666666666666666)  # Approximately 2/3

@@ -3017,3 +3017,49 @@ def cdist(XA, XB, metric='euclidean', *, out=None, **kwargs):
     else:
         raise TypeError('2nd argument metric must be a string identifier '
                         'or a function.')
+
+
+def kulsinski(u, v):
+    """
+    Compute the Kulsinski dissimilarity between two boolean 1-D arrays.
+
+    The Kulsinski dissimilarity is defined as the ratio of the number of discordant
+    pairs (pairs where one element is True and the other is False) to the number of
+    concordant pairs (pairs where both elements are either True or False).
+
+    Parameters
+    ----------
+    u : array_like, bool
+        Input array.
+    v : array_like, bool
+        Input array.
+
+    Returns
+    -------
+    kulsinski : float
+        The Kulsinski dissimilarity between vectors `u` and `v`.
+
+    Examples
+    --------
+    >>> from scipy.spatial import distance
+    >>> distance.kulsinski([1, 0, 0], [0, 1, 0])
+    1.0
+    >>> distance.kulsinski([1, 1, 0], [0, 1, 0])
+    0.5
+    """
+    u = _validate_vector(u)
+    v = _validate_vector(v)
+    
+    concordant = discordant = 0
+    
+    for i in range(len(u)):
+        if u[i] == v[i]:
+            concordant += 1
+        else:
+            discordant += 1
+    
+    if concordant == 0:
+        return float("inf")
+    else:
+        return float(discordant / concordant)
+        
